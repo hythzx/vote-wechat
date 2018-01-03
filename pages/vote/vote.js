@@ -8,7 +8,23 @@ Page({
    */
   data: {
     vote: {},
-    id: null
+    id: null,
+    voted: true
+  },
+
+  radioChange: function (e) {
+    console.log('radio发生change事件，携带value值为：', e.detail.value);
+    for (var i = 0; i < this.data.vote.voteItemList.length; i++) {
+      let voteItem = this.data.vote.voteItemList[i];
+      if (e.detail.value == voteItem.id) {
+        voteItem.checked = true;
+      } else {
+        voteItem.checked = false;
+      }
+    }
+    this.setData({
+      vote: this.data.vote
+    });
   },
 
   /**
@@ -21,17 +37,64 @@ Page({
     this.loadVote();
   },
 
+  submitVote: function () {
+    const me = this;
+    let id = null;
+    for (var i = 0; i < this.data.vote.voteItemList.length; i++) {
+      let voteItem = this.data.vote.voteItemList[i];
+      if (voteItem.checked) {
+        id = voteItem.id;
+      }
+    }
+    if (id == null) {
+      wx.showToast({
+
+      });
+      console.log('没有选择任何值');
+    } else {
+      wx.showLoading({
+        title: '数据提交中..'
+      });
+      wx.request({
+        url: app.globalData.requestUrl + 'votes?login=' + app.globalData.userInfo.nickName + '&voteItemId=' + id,
+        method: 'POST',
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function (res) {
+          wx.hideLoading();
+          wx.showToast({
+            title: '提交成功',
+            icon: 'success',
+            duration: 2000
+          });
+          me.loadVote();
+        }
+      })
+    }
+  },
+
   loadVote: function () {
-    const me= this;
+    const me = this;
     wx.request({
-      url: 'http://localhost:9060/wechat/votes/' + me.data.id + '?login=' + app.globalData.userInfo.nickName, //仅为示例，并非真实的接口地址
+      url: app.globalData.requestUrl + 'votes/' + me.data.id + '?login=' + app.globalData.userInfo.nickName,
       header: {
         'content-type': 'application/json' // 默认值
       },
       success: function (res) {
-         me.setData({
-           vote: res.data
-         });
+       
+        if (res.data.votedItemId) {
+          for (var i = 0; i < res.data.voteItemList.length; i++) {
+            let voteItem = res.data.voteItemList[i];
+            if (res.data.votedItemId == voteItem.id) {
+              voteItem.checked = true;
+            }
+          }
+        }
+        me.setData({
+          vote: res.data,
+          voted: res.data.voted
+        });
       }
     })
   },

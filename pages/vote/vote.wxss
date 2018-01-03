@@ -1,1 +1,12 @@
 /* pages/vote/vote.wxss */
+
+.vote-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+}
+
+.vote-tips {
+  font-size: 0.8em;
+  text-align: center;
+  margin-top: 2em;
+}
