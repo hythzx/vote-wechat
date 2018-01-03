@@ -5,8 +5,8 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#2ba245",
     "navigationBarTitleText": "微投票",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   }
 }

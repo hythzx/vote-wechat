@@ -1,20 +1,20 @@
 <!--index.wxml-->
 <view class="container">
   <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 授权小程序获取微信信息 </button>
+    <button class='weui-btn' type='primary' wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 点击授权 </button>
     <block wx:else>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view>
 
-  <view>
-   <view class="weui-cells__title">问卷列表</view>
-        <view class="weui-cells weui-cells_after-title">
-            <navigator wx:for="{{voteList}}" url="../vote/vote?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">{{item.title}}</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-            </navigator>
-        </view>
+  <view wx:if="{{hasUserInfo && canIUse}}">
+    <view  class="weui-cells__title">问卷列表</view>
+    <view class="weui-cells weui-cells_after-title">
+      <navigator wx:for="{{voteList}}" url="../vote/vote?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">{{item.title}}</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+    </view>
   </view>
 </view>

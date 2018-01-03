@@ -7,20 +7,11 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    voteList : [{
-      id: 1,
-      title: "本周去哪玩"
-    }, {
-      id: 2,
-      title: "过年大家喜欢什么年货"
-    }, {
-      id: 3,
-      title: "本年最佳员工"
-    }]
+    voteList: []
   },
   //事件处理函数
   bindViewTap: function () {
-   
+
   },
   onLoad: function () {
     if (app.globalData.userInfo) {
@@ -49,9 +40,23 @@ Page({
         }
       })
     }
+    this.getVoteList();
+  },
+  getVoteList() {
+    const me = this;
+    wx.request({
+      url: 'http://localhost:9060/wechat/votes?login=' + me.data.userInfo.nickName, //仅为示例，并非真实的接口地址
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success: function (res) {
+        me.setData({
+          voteList: res.data
+        })
+      }
+    })
   },
   getUserInfo: function (e) {
-    console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
